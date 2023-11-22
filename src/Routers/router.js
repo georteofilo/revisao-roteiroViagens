@@ -1,8 +1,11 @@
-const express = require('express')
-const router = express()
+const express = require("express");
+const {
+  validateFieldUser,
+  isEmailAlreadyExists,
+} = require("../Middleware/validator");
+const { registerUser } = require("../Controller/users");
+const router = express();
 
-router.get("/", (req, res) => {
-  return res.status(200).json({ mensagem: "tudo ok"})
-})
+router.post("/users", validateFieldUser, isEmailAlreadyExists, registerUser);
 
-module.exports = router
+module.exports = router;

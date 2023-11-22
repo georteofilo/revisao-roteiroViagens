@@ -1,4 +1,4 @@
-require('dotenv')
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const router = require('./Routers/router')
@@ -9,7 +9,6 @@ app.use(cors())
 app.use(router)
 
 const port = process.env.PORT || 3000
-
 
 app.listen(port, () => {
   console.log(`Servidor na porta ${port}`)
