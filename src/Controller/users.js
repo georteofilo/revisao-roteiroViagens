@@ -29,7 +29,33 @@ const getUser = async (req, res) => {
   return res.status(200).json(user);
 };
 
+const updateUser = async (req, res) => {
+  const { name, email, password } = req.body;
+  const { user } = req;
+
+  try {
+    const passCrypt = await bcrypt.hash(password, 10);
+
+    const newUser = {
+      name,
+      email,
+      password: passCrypt,
+    };
+
+    const response = await db("users")
+      .update(newUser)
+      .where("id", "=", user.id)
+      .returning(["id", "name", "email"]);
+
+    return res.status(200).json(response[0]);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500);
+  }
+};
+
 module.exports = {
   registerUser,
   getUser,
+  updateUser,
 };

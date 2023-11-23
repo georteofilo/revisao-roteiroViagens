@@ -3,7 +3,7 @@ const {
   validateName,
   validateEmail,
   validatePassword,
-} = require("../Service/Fields");
+} = require("../Service/usersService");
 
 const validateFieldUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -27,9 +27,21 @@ const validateFieldUser = (req, res, next) => {
 
 const isEmailAlreadyExists = async (req, res, next) => {
   const { email } = req.body
+  const { user } = req
 
   try {
-    const response = await db('users').select('id').where({email})
+    let response
+
+    if(!user) {
+      response = await db('users')
+      .select('id')
+      .where({email})
+    } else {
+      response = await db('users')
+      .select('id')
+      .where({email})
+      .andWhere("id", "<>", user.id)
+    }
 
     if(response.length > 0){
       return res.status(400).json({ message: "Email já cadastrado"})
