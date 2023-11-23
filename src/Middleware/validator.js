@@ -42,8 +42,24 @@ const isEmailAlreadyExists = async (req, res, next) => {
   }
 }
 
+const validateFieldsLogin = async (req, res, next) => {
+  const { email, password } = req.body
+
+  try {
+    if(!validateEmail(email) || !validatePassword(password)){
+      return res.status(400).json({ message: "Email ou/e senha obrigatórios."})
+    }
+    next()
+
+  } catch (error) {
+    console.log(error.message)
+    return res.status(500)
+  }
+}
+
 
 module.exports = {
   validateFieldUser,
-  isEmailAlreadyExists
+  isEmailAlreadyExists,
+  validateFieldsLogin,
 }
